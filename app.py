@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import textwrap
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -30,544 +29,99 @@ label_mapping = {
 }
 
 # ============================================================
-# HELPER FOR HTML
-# ============================================================
-
-def render_html(html):
-    st.markdown(
-        textwrap.dedent(html),
-        unsafe_allow_html=True
-    )
-
-# ============================================================
-# CUSTOM DARK THEME
+# CUSTOM STYLE
 # ============================================================
 
 st.markdown("""
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-}
-
 .stApp {
     background:
         radial-gradient(
             circle at 10% 10%,
-            rgba(71, 91, 255, 0.14),
-            transparent 28%
+            rgba(70, 90, 255, 0.12),
+            transparent 30%
         ),
         radial-gradient(
             circle at 90% 20%,
-            rgba(150, 45, 255, 0.13),
+            rgba(150, 50, 255, 0.12),
             transparent 30%
         ),
         linear-gradient(
             135deg,
-            #030b18 0%,
-            #071426 50%,
-            #040b17 100%
+            #030b18,
+            #071426,
+            #050b17
         );
-
-    color: #f4f7ff;
 }
 
-.block-container {
-    max-width: 1250px;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
+/* Main text */
+
+h1, h2, h3 {
+    color: #f4f7ff !important;
 }
 
-/* =========================================================
-   SIDEBAR
-   ========================================================= */
+p {
+    color: #b8c6dc;
+}
+
+/* Sidebar */
 
 section[data-testid="stSidebar"] {
     background:
         linear-gradient(
             180deg,
-            #061224 0%,
-            #030a16 100%
+            #061224,
+            #030a16
         );
-
-    border-right: 1px solid rgba(111, 160, 255, 0.18);
 }
 
 section[data-testid="stSidebar"] * {
-    color: #eaf1ff !important;
+    color: #eaf1ff;
 }
 
-.sidebar-title {
-    font-size: 25px;
-    font-weight: 800;
-    margin-bottom: 5px;
-}
-
-.sidebar-subtitle {
-    color: #8ea5c8 !important;
-    font-size: 13px;
-    margin-bottom: 25px;
-}
-
-/* =========================================================
-   TEXT
-   ========================================================= */
-
-h1, h2, h3 {
-    color: #f6f8ff !important;
-}
-
-p {
-    color: #aebed8;
-    line-height: 1.7;
-}
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
+/* Buttons */
 
 .stButton > button {
-    background: linear-gradient(
-        90deg,
-        #24b9ff,
-        #7c3cff
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #24b9ff,
+            #7c3cff
+        );
 
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 0.65rem 1.4rem;
     font-weight: 700;
-
-    box-shadow:
-        0 8px 25px rgba(77, 92, 255, 0.22);
-
-    transition: 0.25s;
+    padding: 10px 20px;
 }
 
-.stButton > button:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 12px 30px rgba(77, 92, 255, 0.35);
-}
-
-/* =========================================================
-   CARDS
-   ========================================================= */
-
-.dark-card {
-    background: rgba(10, 25, 45, 0.78);
-    border: 1px solid rgba(93, 151, 255, 0.20);
-    border-radius: 18px;
-    padding: 25px;
-    margin: 12px 0;
-
-    box-shadow:
-        0 12px 35px rgba(0,0,0,0.18);
-}
-
-.glass-card {
-    background: rgba(255,255,255,0.045);
-    border: 1px solid rgba(150,180,255,0.18);
-    border-radius: 18px;
-    padding: 24px;
-
-    backdrop-filter: blur(12px);
-}
-
-/* =========================================================
-   HERO
-   ========================================================= */
-
-.hero {
-    min-height: 430px;
-
-    border-radius: 28px;
-
-    padding: 55px;
-
-    position: relative;
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 75% 45%,
-            rgba(0, 191, 255, 0.17),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 90% 20%,
-            rgba(139, 55, 255, 0.20),
-            transparent 28%
-        ),
-        linear-gradient(
-            120deg,
-            #061122,
-            #081a31 55%,
-            #071022
-        );
-
-    border: 1px solid rgba(100, 160, 255, 0.20);
-}
-
-.hero-small {
-    color: #91a9ff;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.hero h1 {
-    font-size: 52px;
-    line-height: 1.08;
-    margin: 18px 0;
-    max-width: 650px;
-}
-
-.gradient-text {
-    background:
-        linear-gradient(
-            90deg,
-            #29c8ff,
-            #8550ff
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-    max-width: 610px;
-    font-size: 17px;
-}
-
-/* =========================================================
-   PHONE VISUAL
-   ========================================================= */
-
-.phone-container {
-    height: 330px;
-
-    border-radius: 25px;
-
-    background:
-        radial-gradient(
-            circle at 50% 30%,
-            rgba(42,205,255,0.18),
-            transparent 30%
-        ),
-        linear-gradient(
-            145deg,
-            #111c48,
-            #071e36
-        );
-
-    border: 1px solid rgba(90,170,255,0.28);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow:
-        0 0 50px rgba(0,180,255,0.10),
-        0 0 80px rgba(110,50,255,0.10);
-}
-
-.phone-visual {
-    width: 175px;
-    height: 285px;
-
-    border-radius: 27px;
-
-    background:
-        linear-gradient(
-            160deg,
-            #111936,
-            #082e49
-        );
-
-    border: 2px solid rgba(95,190,255,0.35);
-
-    box-shadow:
-        0 0 35px rgba(50,190,255,0.16);
-
-    text-align: center;
-
-    padding-top: 45px;
-}
-
-/* =========================================================
-   LEVEL CARDS
-   ========================================================= */
-
-.level-box {
-    background: rgba(7, 22, 40, 0.85);
-
-    border: 1px solid rgba(100,150,255,0.18);
-
-    border-radius: 18px;
-
-    padding: 20px 10px;
-
-    text-align: center;
-
-    height: 100%;
-}
-
-.level-dot {
-    width: 15px;
-    height: 15px;
-
-    border-radius: 50%;
-
-    margin:
-        auto
-        auto
-        12px
-        auto;
-}
-
-.level-name {
-    font-weight: 700;
-    color: #eef4ff;
-}
-
-.level-desc {
-    color: #8298b8;
-    font-size: 12px;
-    margin-top: 7px;
-}
-
-/* =========================================================
-   STEP CARDS
-   ========================================================= */
-
-.step-card {
-    background: rgba(8, 24, 43, 0.82);
-
-    border: 1px solid rgba(95, 153, 255, 0.18);
-
-    border-radius: 18px;
-
-    padding: 25px;
-
-    min-height: 190px;
-}
-
-.step-number {
-    color: #53d4ff;
-    font-size: 13px;
-    font-weight: 800;
-}
-
-.step-icon {
-    font-size: 30px;
-    margin: 10px 0;
-}
-
-/* =========================================================
-   RESULT
-   ========================================================= */
-
-.result-card {
-    background:
-        radial-gradient(
-            circle at 50% 0%,
-            rgba(83, 88, 255, 0.20),
-            transparent 55%
-        ),
-        rgba(8, 24, 43, 0.90);
-
-    border: 1px solid rgba(108, 150, 255, 0.28);
-
-    border-radius: 24px;
-
-    padding: 35px;
-
-    text-align: center;
-
-    margin-top: 20px;
-}
-
-.result-level {
-    font-size: 42px;
-    font-weight: 800;
-
-    background:
-        linear-gradient(
-            90deg,
-            #26c8ff,
-            #a348ff
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* =========================================================
-   RISK SCALE
-   ========================================================= */
-
-.risk-scale {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: flex-start;
-
-    gap: 10px;
-
-    background:
-        rgba(4, 15, 29, 0.75);
-
-    border:
-        1px solid rgba(104, 158, 255, 0.20);
-
-    border-radius: 18px;
-
-    padding: 22px 15px;
-
-    margin: 20px 0;
-}
-
-.risk-item {
-    text-align: center;
-    flex: 1;
-}
-
-.risk-dot {
-    width: 14px;
-    height: 14px;
-
-    border-radius: 50%;
-
-    margin:
-        auto
-        auto
-        8px
-        auto;
-}
-
-.risk-active {
-    font-weight: 800;
-    color: #ffffff;
-}
-
-.risk-normal {
-    color: #8196b6;
-    font-size: 13px;
-}
-
-/* =========================================================
-   FACTOR CARDS
-   ========================================================= */
-
-.factor-card {
-    background:
-        rgba(8, 25, 45, 0.82);
-
-    border:
-        1px solid rgba(91, 151, 255, 0.18);
-
-    border-radius: 15px;
-
-    padding: 18px;
-
-    margin-bottom: 12px;
-}
-
-.factor-title {
-    font-weight: 700;
-    color: #f2f6ff;
-}
-
-.factor-value {
-    color: #42caff;
-    font-size: 14px;
-}
-
-/* =========================================================
-   RECOMMENDATIONS
-   ========================================================= */
-
-.recommendation {
-    background:
-        linear-gradient(
-            90deg,
-            rgba(37, 190, 255, 0.08),
-            rgba(130, 60, 255, 0.08)
-        );
-
-    border-left:
-        4px solid #4bc9ff;
-
-    border-radius: 12px;
-
-    padding:
-        15px 18px;
-
-    margin:
-        10px 0;
-}
-
-/* =========================================================
-   METRICS
-   ========================================================= */
+/* Metrics */
 
 [data-testid="stMetric"] {
-    background:
-        rgba(8, 25, 45, 0.75);
-
-    border:
-        1px solid rgba(90, 150, 255, 0.18);
-
+    background: rgba(8, 25, 45, 0.75);
+    border: 1px solid rgba(100, 150, 255, 0.20);
     border-radius: 15px;
-
-    padding: 18px;
+    padding: 15px;
 }
 
-[data-testid="stMetricLabel"] {
-    color: #8fa8cb !important;
-}
-
-[data-testid="stMetricValue"] {
-    color: #f4f7ff !important;
-}
-
-/* =========================================================
-   SLIDERS
-   ========================================================= */
+/* Slider text */
 
 .stSlider label {
-    color: #e8effc !important;
+    color: #eaf1ff !important;
 }
 
-/* =========================================================
-   DIVIDER
-   ========================================================= */
+/* Dataframes */
+
+[data-testid="stDataFrame"] {
+    border-radius: 12px;
+}
+
+/* Divider */
 
 hr {
-    border-color: rgba(100, 150, 255, 0.15);
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer {
-    text-align: center;
-
-    color: #7186a5;
-
-    font-size: 12px;
-
-    padding:
-        35px 0
-        10px;
+    border-color: rgba(100, 150, 255, 0.18);
 }
 
 </style>
@@ -579,15 +133,15 @@ hr {
 
 with st.sidebar:
 
-    render_html("""
-    <div class="sidebar-title">
-        📱 Digital <span style="color:#8050ff;">Grip</span>
-    </div>
+    st.markdown(
+        "# 📱 Digital **Grip**"
+    )
 
-    <div class="sidebar-subtitle">
-        Smartphone Dependence Analysis
-    </div>
-    """)
+    st.caption(
+        "Smartphone Dependence Analysis"
+    )
+
+    st.markdown("---")
 
     page = st.radio(
         "Navigation",
@@ -602,380 +156,185 @@ with st.sidebar:
 
     st.markdown("---")
 
-    render_html("""
-    <div style="color:#7890b3;font-size:12px;">
-        Understand your habits.<br>
-        Discover your digital dependence.<br>
-        Build healthier habits.
-    </div>
-    """)
+    st.caption(
+        "Understand your habits.\n\n"
+        "Discover your digital dependence.\n\n"
+        "Build healthier habits."
+    )
 
 # ============================================================
-# HOME PAGE
+# HOME
 # ============================================================
 
 if page == "🏠 Home":
 
-    render_html("""
-    <div class="hero">
+    # --------------------------------------------------------
+    # HERO
+    # --------------------------------------------------------
 
-        <div class="hero-small">
-            UNDERSTAND • ANALYZE • BUILD HEALTHIER HABITS
-        </div>
+    st.markdown(
+        "# Is Your Smartphone "
+        "**Controlling You?**"
+    )
 
-        <h1>
-            Is Your Smartphone<br>
-            <span class="gradient-text">Controlling You?</span>
-        </h1>
+    st.markdown(
+        "### UNDERSTAND • ANALYZE • BUILD HEALTHIER HABITS"
+    )
 
-        <p>
-            Digital Grip helps you understand your smartphone habits,
-            estimate your dependence level using machine learning,
-            and receive personalized insights for a healthier digital life.
-        </p>
+    st.write(
+        "Digital Grip helps you understand your smartphone "
+        "habits, estimate your digital dependence level using "
+        "machine learning, and discover personalized insights "
+        "for a healthier digital life."
+    )
 
-        <div style="margin-top:30px;">
-            <span style="
-                display:inline-block;
-                background:linear-gradient(90deg,#24b9ff,#7c3cff);
-                padding:13px 25px;
-                border-radius:12px;
-                font-weight:700;
-                color:white;
-            ">
-                Explore Your Digital Habits →
-            </span>
-        </div>
+    st.markdown("")
 
-    </div>
-    """)
+    if st.button(
+        "🔮 Explore Your Digital Habits",
+        use_container_width=False
+    ):
+        st.info(
+            "Use **Predict Risk** from the sidebar to begin."
+        )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("---")
 
     # --------------------------------------------------------
     # INTRODUCTION
     # --------------------------------------------------------
 
-    col1, col2 = st.columns([1.25, 0.75])
+    st.header("📱 Understand Your Digital Habits")
+
+    col1, col2 = st.columns([1.4, 1])
 
     with col1:
 
-        render_html("""
-        <div class="dark-card" style="min-height:330px;">
+        st.write(
+            "Your smartphone is an important part of everyday "
+            "life. Digital Grip helps you understand how your "
+            "smartphone behavior may relate to digital dependence."
+        )
 
-            <div style="
-                color:#50d4ff;
-                font-size:13px;
-                font-weight:700;
-                letter-spacing:1.5px;
-                margin-bottom:15px;
-            ">
-                DIGITAL WELLBEING
-            </div>
+        st.write(
+            "The system analyzes behavioral patterns related to:"
+        )
 
-            <h2 style="font-size:30px;">
-                📱 Understand Your Digital Habits
-            </h2>
-
-            <p style="font-size:16px;">
-                Your smartphone is part of everyday life.
-                But how much does it influence your behavior?
-            </p>
-
-            <p style="font-size:16px;">
-                Digital Grip analyzes behavioral patterns related to
-                phone checking, distraction, productivity, sleep,
-                and difficulty reducing smartphone usage.
-            </p>
-
-            <div style="
-                margin-top:25px;
-                display:flex;
-                gap:10px;
-                flex-wrap:wrap;
-            ">
-
-                <span style="
-                    background:rgba(36,201,255,0.10);
-                    border:1px solid rgba(36,201,255,0.25);
-                    padding:8px 14px;
-                    border-radius:20px;
-                    color:#65d7ff;
-                    font-size:13px;
-                ">
-                    Behavioral Analysis
-                </span>
-
-                <span style="
-                    background:rgba(124,60,255,0.10);
-                    border:1px solid rgba(124,60,255,0.25);
-                    padding:8px 14px;
-                    border-radius:20px;
-                    color:#b58cff;
-                    font-size:13px;
-                ">
-                    Machine Learning
-                </span>
-
-                <span style="
-                    background:rgba(36,201,255,0.10);
-                    border:1px solid rgba(36,201,255,0.25);
-                    padding:8px 14px;
-                    border-radius:20px;
-                    color:#65d7ff;
-                    font-size:13px;
-                ">
-                    Digital Wellbeing
-                </span>
-
-            </div>
-
-        </div>
+        st.markdown("""
+        - 📱 Phone checking
+        - 🎯 Distraction
+        - ⚡ Productivity
+        - 📚 Daily responsibilities
+        - 😴 Sleep impact
+        - 🌙 Night-time checking
+        - 🔄 Urge to check
+        - 🛑 Difficulty reducing smartphone usage
         """)
 
     with col2:
 
-        render_html("""
-        <div class="phone-container">
+        st.markdown("### 📱")
 
-            <div class="phone-visual">
+        st.markdown(
+            "## Better Habits"
+        )
 
-                <div style="
-                    color:#67d8ff;
-                    font-size:10px;
-                    font-weight:700;
-                    letter-spacing:1.5px;
-                ">
-                    DIGITAL GRIP
-                </div>
+        st.markdown(
+            "### Brighter Digital Life 🌱"
+        )
 
-                <div style="
-                    font-size:42px;
-                    margin-top:35px;
-                ">
-                    📱
-                </div>
+        st.info(
+            "Awareness is the first step toward healthier "
+            "smartphone usage."
+        )
 
-                <div style="
-                    color:white;
-                    font-size:18px;
-                    font-weight:800;
-                    margin-top:20px;
-                ">
-                    Better Habits
-                </div>
-
-                <div style="
-                    font-size:14px;
-                    margin-top:5px;
-                    background:linear-gradient(90deg,#29c8ff,#a348ff);
-                    -webkit-background-clip:text;
-                    -webkit-text-fill-color:transparent;
-                    font-weight:700;
-                ">
-                    Brighter Future
-                </div>
-
-                <div style="
-                    font-size:27px;
-                    margin-top:18px;
-                ">
-                    🌱
-                </div>
-
-            </div>
-
-        </div>
-        """)
+    st.markdown("---")
 
     # --------------------------------------------------------
-    # FIVE DEPENDENCE LEVELS
+    # DEPENDENCE LEVELS
     # --------------------------------------------------------
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.header("🎯 Five Dependence Levels")
 
-    render_html("""
-    <div style="margin-bottom:10px;">
-
-        <h2>
-            🎯 Five Dependence Levels
-        </h2>
-
-        <p>
-            Your prediction will fall into one of these five levels.
-        </p>
-
-    </div>
-    """)
+    st.write(
+        "Your prediction will fall into one of these five levels."
+    )
 
     levels = [
-        (
-            "Very Low",
-            "#39d98a",
-            "Healthy usage"
-        ),
-        (
-            "Low",
-            "#8ee65f",
-            "Mild indicators"
-        ),
-        (
-            "Moderate",
-            "#ffbd45",
-            "Noticeable patterns"
-        ),
-        (
-            "High",
-            "#ff685b",
-            "Strong indicators"
-        ),
-        (
-            "Very High",
-            "#ed4d83",
-            "Severe indicators"
-        )
+        ("🟢", "Very Low", "Healthy usage"),
+        ("🟢", "Low", "Mild indicators"),
+        ("🟡", "Moderate", "Noticeable patterns"),
+        ("🔴", "High", "Strong indicators"),
+        ("🟣", "Very High", "Severe indicators")
     ]
 
     cols = st.columns(5)
 
-    for col, (name, color, description) in zip(
+    for col, (icon, level, description) in zip(
         cols,
         levels
     ):
 
         with col:
 
-            render_html(f"""
-            <div class="level-box">
+            st.markdown(
+                f"### {icon} {level}"
+            )
 
-                <div class="level-dot"
-                     style="
-                         background:{color};
-                         box-shadow:0 0 12px {color};
-                     ">
-                </div>
+            st.caption(
+                description
+            )
 
-                <div class="level-name">
-                    {name}
-                </div>
-
-                <div class="level-desc">
-                    {description}
-                </div>
-
-            </div>
-            """)
+    st.markdown("---")
 
     # --------------------------------------------------------
     # HOW IT WORKS
     # --------------------------------------------------------
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    render_html("""
-    <div>
-
-        <h2>
-            🔍 How Digital Grip Works
-        </h2>
-
-        <p>
-            Three simple steps to understand your smartphone habits.
-        </p>
-
-    </div>
-    """)
+    st.header("🔍 How Digital Grip Works")
 
     col1, col2, col3 = st.columns(3)
 
-    steps = [
-        (
-            "01",
-            "📱",
-            "Enter Your Habits",
-            "Answer simple questions about your everyday smartphone behavior."
-        ),
-        (
-            "02",
-            "🧠",
-            "ML Prediction",
-            "The machine learning model analyzes your behavioral patterns."
-        ),
-        (
-            "03",
-            "💡",
-            "Get Insights",
-            "Receive your dependence level and personalized recommendations."
+    with col1:
+
+        st.subheader("1️⃣ Enter Your Habits")
+
+        st.write(
+            "Answer simple questions about your everyday "
+            "smartphone behavior."
         )
-    ]
 
-    for col, (
-        number,
-        icon,
-        title,
-        description
-    ) in zip(
-        [col1, col2, col3],
-        steps
-    ):
+    with col2:
 
-        with col:
+        st.subheader("2️⃣ ML Prediction")
 
-            render_html(f"""
-            <div class="step-card">
+        st.write(
+            "The machine learning model analyzes your "
+            "behavioral patterns."
+        )
 
-                <div class="step-number">
-                    {number}
-                </div>
+    with col3:
 
-                <div class="step-icon">
-                    {icon}
-                </div>
+        st.subheader("3️⃣ Get Insights")
 
-                <h3>
-                    {title}
-                </h3>
+        st.write(
+            "Receive your estimated dependence level and "
+            "personalized digital wellbeing recommendations."
+        )
 
-                <p>
-                    {description}
-                </p>
-
-            </div>
-            """)
+    st.markdown("---")
 
     # --------------------------------------------------------
-    # BOTTOM MESSAGE
+    # FINAL MESSAGE
     # --------------------------------------------------------
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.header(
+        "🌱 Take Control of Your Digital Habits"
+    )
 
-    render_html("""
-    <div class="glass-card" style="
-        text-align:center;
-        padding:35px;
-        background:
-        linear-gradient(
-            90deg,
-            rgba(36,190,255,0.07),
-            rgba(124,60,255,0.10)
-        );
-    ">
-
-        <div style="font-size:30px;">
-            🌱
-        </div>
-
-        <h2>
-            Take Control of Your Digital Habits
-        </h2>
-
-        <p>
-            Awareness is the first step toward healthier
-            smartphone usage.
-        </p>
-
-    </div>
-    """)
+    st.write(
+        "Technology should support your life — not control it."
+    )
 
 # ============================================================
 # PREDICT RISK
@@ -983,32 +342,19 @@ if page == "🏠 Home":
 
 elif page == "🔮 Predict Risk":
 
-    render_html("""
-    <div class="hero" style="min-height:260px;padding:40px;">
+    st.title("🔮 Smartphone Dependence Prediction")
 
-        <div class="hero-small">
-            SMARTPHONE HABIT ANALYSIS
-        </div>
+    st.write(
+        "Tell us about your smartphone habits."
+    )
 
-        <h1 style="font-size:40px;">
-            Understand Your
-            <span class="gradient-text">
-                Digital Dependence
-            </span>
-        </h1>
+    st.info(
+        "Rate each behavior from 1 to 5. "
+        "Higher values generally represent stronger "
+        "smartphone-related behavior."
+    )
 
-        <p>
-            Rate each behavior from 1 to 5.
-            Higher values generally represent stronger
-            smartphone-related behavior.
-        </p>
-
-    </div>
-    """)
-
-    st.markdown("## 📊 Your Smartphone Habits")
-
-    input_values = {}
+    st.header("📊 Your Smartphone Habits")
 
     questions = {
         "Phone_Checking":
@@ -1042,6 +388,8 @@ elif page == "🔮 Predict Risk":
             "🌙 How often do you wake up during the night and check your phone?"
     }
 
+    input_values = {}
+
     col1, col2 = st.columns(2)
 
     for index, feature in enumerate(features):
@@ -1063,7 +411,7 @@ elif page == "🔮 Predict Risk":
                 key=feature
             )
 
-    st.markdown("### ")
+    st.markdown("")
 
     if st.button(
         "🔮 Predict My Dependence",
@@ -1072,7 +420,9 @@ elif page == "🔮 Predict Risk":
 
         user_data = pd.DataFrame(
             [input_values]
-        )[features]
+        )
+
+        user_data = user_data[features]
 
         prediction = model.predict(
             user_data
@@ -1094,122 +444,70 @@ elif page == "🔮 Predict Risk":
         # RESULT
         # ----------------------------------------------------
 
-        render_html(f"""
-        <div class="result-card">
+        st.markdown("---")
 
-            <div style="
-                color:#8ea6c9;
-                font-size:14px;
-            ">
-                YOUR ESTIMATED SMARTPHONE DEPENDENCE LEVEL
-            </div>
+        st.header("🎯 Your Result")
 
-            <div class="result-level">
-                {predicted_label}
-            </div>
+        st.success(
+            f"Your estimated smartphone dependence level is: "
+            f"**{predicted_label}**"
+        )
 
-            <div style="color:#9fb2ce;">
-                Model confidence:
-                <b>{confidence:.2f}%</b>
-            </div>
-
-        </div>
-        """)
+        st.metric(
+            "Model Confidence",
+            f"{confidence:.2f}%"
+        )
 
         # ----------------------------------------------------
-        # RISK SCALE
+        # OVERALL LEVEL
         # ----------------------------------------------------
 
-        st.markdown("### 🎯 Your Dependence Scale")
+        st.subheader(
+            "📊 Overall Dependence Level"
+        )
 
-        risk_colors = {
-            "Very Low": "#39d98a",
-            "Low": "#8ee65f",
-            "Moderate": "#ffbd45",
-            "High": "#ff685b",
-            "Very High": "#ed4d83"
-        }
-
-        scale_html = """
-        <div class="risk-scale">
-        """
-
-        for level in [
+        risk_levels = [
             "Very Low",
             "Low",
             "Moderate",
             "High",
             "Very High"
-        ]:
+        ]
 
-            active = (
-                level == predicted_label
-            )
+        for level in risk_levels:
 
-            your_result = ""
+            if level == predicted_label:
 
-            if active:
-                your_result = """
-                <div style="
-                    color:#55d5ff;
-                    font-size:11px;
-                    margin-top:5px;
-                ">
-                    YOUR RESULT
-                </div>
-                """
+                st.success(
+                    f"🎯 **YOUR RESULT → {level}**"
+                )
 
-            scale_html += f"""
-            <div class="risk-item">
+            else:
 
-                <div class="risk-dot"
-                     style="
-                         background:{risk_colors[level]};
-                         box-shadow:
-                         0 0 10px
-                         {risk_colors[level]};
-                     ">
-                </div>
-
-                <div class="
-                    {'risk-active'
-                     if active
-                     else 'risk-normal'}
-                ">
-                    {level}
-                </div>
-
-                {your_result}
-
-            </div>
-            """
-
-        scale_html += """
-        </div>
-        """
-
-        render_html(scale_html)
+                st.write(
+                    f"○ {level}"
+                )
 
         # ----------------------------------------------------
         # PROBABILITY
         # ----------------------------------------------------
 
-        st.markdown("### 📈 Prediction Probability")
+        st.subheader(
+            "📈 Prediction Probability"
+        )
 
-        probability_df = pd.DataFrame({
-            "Dependence Level": [
+        probability_df = pd.DataFrame(
+            {
+                "Probability (%)":
+                    probabilities * 100
+            },
+            index=[
                 "Very Low",
                 "Low",
                 "Moderate",
                 "High",
                 "Very High"
-            ],
-            "Probability (%)":
-                probabilities * 100
-        })
-
-        probability_df = probability_df.set_index(
-            "Dependence Level"
+            ]
         )
 
         st.bar_chart(
@@ -1220,73 +518,70 @@ elif page == "🔮 Predict Risk":
         # KEY FACTORS
         # ----------------------------------------------------
 
-        st.markdown("### 🧠 Key Behavioral Factors")
+        st.subheader(
+            "🧠 Key Behavioral Factors"
+        )
 
         importance = model.feature_importances_
 
         factor_data = []
 
-        for feature, value, imp in zip(
+        for feature, importance_value in zip(
             features,
-            [
-                input_values[f]
-                for f in features
-            ],
             importance
         ):
 
-            factor_data.append({
-                "feature": feature,
-                "value": value,
-                "score": value * imp
-            })
+            factor_data.append(
+                (
+                    feature,
+                    input_values[feature],
+                    importance_value
+                )
+            )
 
-        factor_data = sorted(
-            factor_data,
-            key=lambda x: x["score"],
+        factor_data.sort(
+            key=lambda x: x[1] * x[2],
             reverse=True
         )
 
-        cols = st.columns(2)
+        factor_col1, factor_col2 = st.columns(2)
 
-        for i, factor in enumerate(
+        for index, (
+            feature,
+            value,
+            importance_value
+        ) in enumerate(
             factor_data[:6]
         ):
 
-            with cols[i % 2]:
+            display_name = (
+                feature
+                .replace("_", " ")
+                .title()
+            )
 
-                display_name = (
-                    factor["feature"]
-                    .replace("_", " ")
-                    .title()
+            with (
+                factor_col1
+                if index % 2 == 0
+                else factor_col2
+            ):
+
+                st.info(
+                    f"**{display_name}**\n\n"
+                    f"Your rating: **{value}/5**"
                 )
-
-                render_html(f"""
-                <div class="factor-card">
-
-                    <div class="factor-title">
-                        {display_name}
-                    </div>
-
-                    <div class="factor-value">
-                        Your rating:
-                        {factor["value"]} / 5
-                    </div>
-
-                </div>
-                """)
 
         # ----------------------------------------------------
         # RECOMMENDATIONS
         # ----------------------------------------------------
 
-        st.markdown(
-            "### 💡 Digital Wellbeing Recommendations"
+        st.subheader(
+            "💡 Digital Wellbeing Recommendations"
         )
 
         if predicted_label in [
-            "Very High",
-            "High"
+            "High",
+            "Very High"
         ]:
 
             recommendations = [
@@ -1317,11 +612,9 @@ elif page == "🔮 Predict Risk":
 
         for recommendation in recommendations:
 
-            render_html(f"""
-            <div class="recommendation">
-                {recommendation}
-            </div>
-            """)
+            st.write(
+                f"💡 {recommendation}"
+            )
 
 # ============================================================
 # ANALYTICS
@@ -1329,94 +622,126 @@ elif page == "🔮 Predict Risk":
 
 elif page == "📊 Analytics":
 
-    render_html("""
-    <div class="hero" style="min-height:240px;padding:40px;">
+    st.title("📊 Analytics")
 
-        <div class="hero-small">
-            MODEL ANALYTICS
-        </div>
+    st.write(
+        "Explore the machine learning model and the behavioral "
+        "features used for prediction."
+    )
 
-        <h1 style="font-size:40px;">
-            Explore the
-            <span class="gradient-text">
-                Model
-            </span>
-        </h1>
-
-        <p>
-            Understand how the machine learning model performs
-            and which behavioral indicators contribute most
-            to predictions.
-        </p>
-
-    </div>
-    """)
-
-    st.markdown("## 📊 Model Performance")
+    # --------------------------------------------------------
+    # MODEL METRICS
+    # --------------------------------------------------------
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
+
         st.metric(
             "ML Model",
             "Random Forest"
         )
 
     with col2:
+
         st.metric(
             "Test Accuracy",
             "88.67%"
         )
 
     with col3:
+
         st.metric(
             "Risk Levels",
             "5"
         )
 
-    st.markdown("## 🧠 Feature Importance")
+    st.markdown("---")
 
-    importance_df = pd.DataFrame({
-        "Feature": features,
-        "Importance":
-            model.feature_importances_
-    }).sort_values(
-        "Importance",
-        ascending=False
+    # --------------------------------------------------------
+    # FEATURE IMPORTANCE
+    # --------------------------------------------------------
+
+    st.header(
+        "🧠 Feature Importance"
     )
 
-    st.bar_chart(
-        importance_df.set_index(
-            "Feature"
+    importance_df = pd.DataFrame(
+        {
+            "Feature": features,
+            "Importance":
+                model.feature_importances_
+        }
+    )
+
+    importance_df = (
+        importance_df
+        .sort_values(
+            "Importance",
+            ascending=False
         )
     )
 
-    st.markdown("## 📋 Behavioral Indicators")
+    chart_df = importance_df.copy()
 
-    display_df = importance_df.copy()
-
-    display_df["Feature"] = (
-        display_df["Feature"]
-        .str.replace("_", " ")
+    chart_df["Feature"] = (
+        chart_df["Feature"]
+        .str.replace(
+            "_",
+            " ",
+            regex=False
+        )
         .str.title()
     )
 
-    display_df["Importance"] = (
-        display_df["Importance"] * 100
+    chart_df = chart_df.set_index(
+        "Feature"
+    )
+
+    st.bar_chart(
+        chart_df
+    )
+
+    # --------------------------------------------------------
+    # TABLE
+    # --------------------------------------------------------
+
+    st.header(
+        "📋 Behavioral Indicators"
+    )
+
+    table_df = importance_df.copy()
+
+    table_df["Feature"] = (
+        table_df["Feature"]
+        .str.replace(
+            "_",
+            " ",
+            regex=False
+        )
+        .str.title()
+    )
+
+    table_df["Importance (%)"] = (
+        table_df["Importance"] * 100
     ).round(2)
 
-    display_df = display_df.rename(
+    table_df = table_df[
+        [
+            "Feature",
+            "Importance (%)"
+        ]
+    ]
+
+    table_df = table_df.rename(
         columns={
             "Feature":
-                "Behavioral Indicator",
-
-            "Importance":
-                "Importance (%)"
+                "Behavioral Indicator"
         }
     )
 
     st.dataframe(
-        display_df,
+        table_df,
         use_container_width=True,
         hide_index=True
     )
@@ -1427,87 +752,78 @@ elif page == "📊 Analytics":
 
 elif page == "🤖 Model Information":
 
-    render_html("""
-    <div class="hero" style="min-height:250px;padding:40px;">
+    st.title(
+        "🤖 Model Information"
+    )
 
-        <div class="hero-small">
-            MACHINE LEARNING
-        </div>
+    st.write(
+        "Digital Grip uses a Random Forest classification "
+        "model to estimate smartphone dependence."
+    )
 
-        <h1 style="font-size:40px;">
-            How the
-            <span class="gradient-text">
-                Model Works
-            </span>
-        </h1>
+    st.header(
+        "🌳 Random Forest"
+    )
 
-        <p>
-            Digital Grip uses a Random Forest classification model
-            to estimate smartphone dependence from behavioral indicators.
-        </p>
+    st.write(
+        "Random Forest is an ensemble machine learning algorithm "
+        "that combines multiple decision trees to make a final "
+        "classification."
+    )
 
-    </div>
-    """)
-
-    st.markdown("## 🤖 Random Forest")
-
-    render_html("""
-    <div class="dark-card">
-
-        <p>
-            Random Forest is an ensemble machine learning algorithm
-            that combines multiple decision trees to make a final
-            prediction.
-        </p>
-
-        <p>
-            Each tree analyzes behavioral patterns from the input
-            features, while the combined forest produces the final
-            dependence level.
-        </p>
-
-    </div>
-    """)
+    st.write(
+        "The model analyzes the behavioral indicators provided "
+        "by the user and predicts one of five dependence levels."
+    )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
+
         st.metric(
             "Algorithm",
             "Random Forest"
         )
 
     with col2:
+
         st.metric(
             "Input Features",
             "10"
         )
 
     with col3:
+
         st.metric(
             "Classes",
             "5"
         )
 
-    st.markdown("## 🎯 Prediction Classes")
+    st.markdown("---")
 
-    class_df = pd.DataFrame({
-        "Class": [
-            "Very Low",
-            "Low",
-            "Moderate",
-            "High",
-            "Very High"
-        ],
+    st.header(
+        "🎯 Prediction Classes"
+    )
 
-        "Meaning": [
-            "Healthy usage patterns",
-            "Mild dependence indicators",
-            "Noticeable dependence patterns",
-            "Strong dependence indicators",
-            "Severe dependence indicators"
-        ]
-    })
+    class_df = pd.DataFrame(
+        {
+            "Dependence Level": [
+                "Very Low",
+                "Low",
+                "Moderate",
+                "High",
+                "Very High"
+            ],
+
+            "Description": [
+                "Healthy usage patterns",
+                "Mild dependence indicators",
+                "Noticeable dependence patterns",
+                "Strong dependence indicators",
+                "Severe dependence indicators"
+            ]
+        }
+    )
 
     st.dataframe(
         class_df,
@@ -1515,7 +831,9 @@ elif page == "🤖 Model Information":
         hide_index=True
     )
 
-    st.markdown("## 📌 Model Inputs")
+    st.header(
+        "📌 Model Inputs"
+    )
 
     feature_names = [
         feature
@@ -1524,31 +842,27 @@ elif page == "🤖 Model Information":
         for feature in features
     ]
 
-    for i in range(
+    for index in range(
         0,
         len(feature_names),
         2
     ):
 
-        cols = st.columns(2)
+        col1, col2 = st.columns(2)
 
-        with cols[0]:
+        with col1:
 
-            render_html(f"""
-            <div class="factor-card">
-                🔹 {feature_names[i]}
-            </div>
-            """)
+            st.info(
+                f"🔹 {feature_names[index]}"
+            )
 
-        if i + 1 < len(feature_names):
+        if index + 1 < len(feature_names):
 
-            with cols[1]:
+            with col2:
 
-                render_html(f"""
-                <div class="factor-card">
-                    🔹 {feature_names[i + 1]}
-                </div>
-                """)
+                st.info(
+                    f"🔹 {feature_names[index + 1]}"
+                )
 
 # ============================================================
 # ABOUT
@@ -1556,112 +870,89 @@ elif page == "🤖 Model Information":
 
 elif page == "ℹ️ About":
 
-    render_html("""
-    <div class="hero" style="min-height:260px;padding:40px;">
+    st.title(
+        "ℹ️ About Digital Grip"
+    )
 
-        <div class="hero-small">
-            ABOUT DIGITAL GRIP
-        </div>
+    st.write(
+        "Digital Grip is a machine learning project focused on "
+        "understanding smartphone-related behavioral patterns "
+        "and estimating digital dependence."
+    )
 
-        <h1 style="font-size:40px;">
-            Building a
-            <span class="gradient-text">
-                Healthier Digital Life
-            </span>
-        </h1>
+    st.header(
+        "🎯 Project Objective"
+    )
 
-        <p>
-            Digital Grip is a machine learning project focused on
-            understanding smartphone-related behavioral patterns
-            and estimating digital dependence.
-        </p>
+    st.write(
+        "The goal of Digital Grip is to help users understand "
+        "their smartphone-related behaviors and identify patterns "
+        "associated with different levels of smartphone dependence."
+    )
 
-    </div>
-    """)
+    st.write(
+        "The system combines behavioral inputs with machine "
+        "learning to provide an estimated dependence level and "
+        "digital wellbeing recommendations."
+    )
 
-    st.markdown("## 🎯 Project Objective")
+    st.markdown("---")
 
-    render_html("""
-    <div class="dark-card">
-
-        <p>
-            The goal of Digital Grip is to help users understand
-            their smartphone-related behaviors and identify patterns
-            associated with different levels of smartphone dependence.
-        </p>
-
-        <p>
-            The system combines behavioral inputs with machine learning
-            to provide an estimated dependence level and personalized
-            digital wellbeing recommendations.
-        </p>
-
-    </div>
-    """)
-
-    st.markdown("## ⚙️ What Digital Grip Analyzes")
+    st.header(
+        "⚙️ What Digital Grip Analyzes"
+    )
 
     topics = [
-        ("📱", "Phone Checking"),
-        ("🎯", "Distraction"),
-        ("⚡", "Productivity"),
-        ("📚", "Daily Responsibilities"),
-        ("🌅", "Morning Phone Checking"),
-        ("😴", "Sleep Impact"),
-        ("🌙", "Night Checking"),
-        ("📵", "Comfort Without Phone"),
-        ("🛑", "Difficulty Reducing Usage"),
-        ("🔄", "Urge To Check")
+        "📱 Phone Checking",
+        "🎯 Distraction",
+        "⚡ Productivity",
+        "📚 Daily Responsibilities",
+        "🌅 Morning Phone Checking",
+        "😴 Sleep Impact",
+        "🌙 Night Checking",
+        "📵 Comfort Without Phone",
+        "🛑 Difficulty Reducing Usage",
+        "🔄 Urge To Check"
     ]
 
-    cols = st.columns(2)
+    col1, col2 = st.columns(2)
 
-    for i, (
-        icon,
-        topic
-    ) in enumerate(topics):
+    for index, topic in enumerate(topics):
 
-        with cols[i % 2]:
+        with (
+            col1
+            if index % 2 == 0
+            else col2
+        ):
 
-            render_html(f"""
-            <div class="factor-card">
-                {icon}
-                &nbsp;
-                <b>{topic}</b>
-            </div>
-            """)
+            st.info(topic)
 
-    st.markdown("## 🌱 Digital Wellbeing")
+    st.markdown("---")
 
-    render_html("""
-    <div class="glass-card">
+    st.header(
+        "🌱 Digital Wellbeing"
+    )
 
-        <h3>
-            Technology should support your life —
-            not control it.
-        </h3>
+    st.write(
+        "Technology should support your life — not control it."
+    )
 
-        <p>
-            Digital Grip is designed to encourage awareness
-            of smartphone habits and help users make more
-            intentional decisions about their digital behavior.
-        </p>
-
-    </div>
-    """)
+    st.write(
+        "Digital Grip is designed to encourage awareness of "
+        "smartphone habits and help users make more intentional "
+        "decisions about their digital behavior."
+    )
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-render_html("""
-<div class="footer">
+st.markdown("---")
 
-    Digital Grip • Smartphone Usage & Digital Dependence Analysis
+st.caption(
+    "Digital Grip • Smartphone Usage & Digital Dependence Analysis"
+)
 
-    <br>
-
-    Built using Machine Learning and Streamlit
-
-</div>
-""")
+st.caption(
+    "Built using Machine Learning and Streamlit"
+)

@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import textwrap
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -29,6 +30,16 @@ label_mapping = {
 }
 
 # ============================================================
+# HELPER FOR HTML
+# ============================================================
+
+def render_html(html):
+    st.markdown(
+        textwrap.dedent(html),
+        unsafe_allow_html=True
+    )
+
+# ============================================================
 # CUSTOM DARK THEME
 # ============================================================
 
@@ -43,23 +54,44 @@ html, body, [class*="css"] {
 
 .stApp {
     background:
-        radial-gradient(circle at 10% 10%, rgba(71, 91, 255, 0.14), transparent 28%),
-        radial-gradient(circle at 90% 20%, rgba(150, 45, 255, 0.13), transparent 30%),
-        linear-gradient(135deg, #030b18 0%, #071426 50%, #040b17 100%);
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(71, 91, 255, 0.14),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(150, 45, 255, 0.13),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #030b18 0%,
+            #071426 50%,
+            #040b17 100%
+        );
+
     color: #f4f7ff;
 }
 
-/* Main container */
 .block-container {
     max-width: 1250px;
     padding-top: 2rem;
     padding-bottom: 4rem;
 }
 
-/* Sidebar */
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 section[data-testid="stSidebar"] {
     background:
-        linear-gradient(180deg, #061224 0%, #030a16 100%);
+        linear-gradient(
+            180deg,
+            #061224 0%,
+            #030a16 100%
+        );
+
     border-right: 1px solid rgba(111, 160, 255, 0.18);
 }
 
@@ -79,7 +111,10 @@ section[data-testid="stSidebar"] * {
     margin-bottom: 25px;
 }
 
-/* Text */
+/* =========================================================
+   TEXT
+   ========================================================= */
+
 h1, h2, h3 {
     color: #f6f8ff !important;
 }
@@ -89,31 +124,49 @@ p {
     line-height: 1.7;
 }
 
-/* Buttons */
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
 .stButton > button {
-    background: linear-gradient(90deg, #24b9ff, #7c3cff);
+    background: linear-gradient(
+        90deg,
+        #24b9ff,
+        #7c3cff
+    );
+
     color: white;
     border: none;
     border-radius: 12px;
     padding: 0.65rem 1.4rem;
     font-weight: 700;
+
+    box-shadow:
+        0 8px 25px rgba(77, 92, 255, 0.22);
+
     transition: 0.25s;
-    box-shadow: 0 8px 25px rgba(77, 92, 255, 0.22);
 }
 
 .stButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(77, 92, 255, 0.35);
+
+    box-shadow:
+        0 12px 30px rgba(77, 92, 255, 0.35);
 }
 
-/* Cards */
+/* =========================================================
+   CARDS
+   ========================================================= */
+
 .dark-card {
     background: rgba(10, 25, 45, 0.78);
     border: 1px solid rgba(93, 151, 255, 0.20);
     border-radius: 18px;
     padding: 25px;
     margin: 12px 0;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.18);
 }
 
 .glass-card {
@@ -121,20 +174,42 @@ p {
     border: 1px solid rgba(150,180,255,0.18);
     border-radius: 18px;
     padding: 24px;
+
     backdrop-filter: blur(12px);
 }
 
-/* Hero */
+/* =========================================================
+   HERO
+   ========================================================= */
+
 .hero {
     min-height: 430px;
+
     border-radius: 28px;
-    padding: 55px 55px 45px 55px;
+
+    padding: 55px;
+
     position: relative;
     overflow: hidden;
+
     background:
-        radial-gradient(circle at 75% 45%, rgba(0, 191, 255, 0.17), transparent 28%),
-        radial-gradient(circle at 90% 20%, rgba(139, 55, 255, 0.20), transparent 28%),
-        linear-gradient(120deg, #061122, #081a31 55%, #071022);
+        radial-gradient(
+            circle at 75% 45%,
+            rgba(0, 191, 255, 0.17),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(139, 55, 255, 0.20),
+            transparent 28%
+        ),
+        linear-gradient(
+            120deg,
+            #061122,
+            #081a31 55%,
+            #071022
+        );
+
     border: 1px solid rgba(100, 160, 255, 0.20);
 }
 
@@ -154,7 +229,13 @@ p {
 }
 
 .gradient-text {
-    background: linear-gradient(90deg, #29c8ff, #8550ff);
+    background:
+        linear-gradient(
+            90deg,
+            #29c8ff,
+            #8550ff
+        );
+
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -164,47 +245,90 @@ p {
     font-size: 17px;
 }
 
-/* Phone visual */
-.phone-visual {
-    background: linear-gradient(160deg, #161d49, #082f4e);
-    border: 2px solid rgba(111, 179, 255, 0.30);
-    border-radius: 34px;
-    width: 210px;
-    height: 360px;
-    margin: auto;
-    padding: 30px 18px;
+/* =========================================================
+   PHONE VISUAL
+   ========================================================= */
+
+.phone-container {
+    height: 330px;
+
+    border-radius: 25px;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(42,205,255,0.18),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            #111c48,
+            #071e36
+        );
+
+    border: 1px solid rgba(90,170,255,0.28);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     box-shadow:
-        0 0 50px rgba(0, 170, 255, 0.18),
-        0 0 90px rgba(120, 50, 255, 0.14);
+        0 0 50px rgba(0,180,255,0.10),
+        0 0 80px rgba(110,50,255,0.10);
+}
+
+.phone-visual {
+    width: 175px;
+    height: 285px;
+
+    border-radius: 27px;
+
+    background:
+        linear-gradient(
+            160deg,
+            #111936,
+            #082e49
+        );
+
+    border: 2px solid rgba(95,190,255,0.35);
+
+    box-shadow:
+        0 0 35px rgba(50,190,255,0.16);
+
     text-align: center;
+
+    padding-top: 45px;
 }
 
-.phone-title {
-    font-size: 20px;
-    font-weight: 800;
-    margin-top: 70px;
-}
+/* =========================================================
+   LEVEL CARDS
+   ========================================================= */
 
-.phone-leaf {
-    font-size: 45px;
-    margin-top: 15px;
-}
-
-/* Level cards */
 .level-box {
     background: rgba(7, 22, 40, 0.85);
+
     border: 1px solid rgba(100,150,255,0.18);
+
     border-radius: 18px;
+
     padding: 20px 10px;
+
     text-align: center;
+
     height: 100%;
 }
 
 .level-dot {
     width: 15px;
     height: 15px;
+
     border-radius: 50%;
-    margin: auto auto 12px auto;
+
+    margin:
+        auto
+        auto
+        12px
+        auto;
 }
 
 .level-name {
@@ -218,12 +342,19 @@ p {
     margin-top: 7px;
 }
 
-/* Step cards */
+/* =========================================================
+   STEP CARDS
+   ========================================================= */
+
 .step-card {
     background: rgba(8, 24, 43, 0.82);
+
     border: 1px solid rgba(95, 153, 255, 0.18);
+
     border-radius: 18px;
+
     padding: 25px;
+
     min-height: 190px;
 }
 
@@ -238,36 +369,68 @@ p {
     margin: 10px 0;
 }
 
-/* Result */
+/* =========================================================
+   RESULT
+   ========================================================= */
+
 .result-card {
     background:
-        radial-gradient(circle at 50% 0%, rgba(83, 88, 255, 0.20), transparent 55%),
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(83, 88, 255, 0.20),
+            transparent 55%
+        ),
         rgba(8, 24, 43, 0.90);
+
     border: 1px solid rgba(108, 150, 255, 0.28);
+
     border-radius: 24px;
+
     padding: 35px;
+
     text-align: center;
+
     margin-top: 20px;
 }
 
 .result-level {
     font-size: 42px;
     font-weight: 800;
-    background: linear-gradient(90deg, #26c8ff, #a348ff);
+
+    background:
+        linear-gradient(
+            90deg,
+            #26c8ff,
+            #a348ff
+        );
+
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* Risk scale */
+/* =========================================================
+   RISK SCALE
+   ========================================================= */
+
 .risk-scale {
     display: flex;
+
     justify-content: space-between;
+
     align-items: flex-start;
+
     gap: 10px;
-    background: rgba(4, 15, 29, 0.75);
-    border: 1px solid rgba(104, 158, 255, 0.20);
+
+    background:
+        rgba(4, 15, 29, 0.75);
+
+    border:
+        1px solid rgba(104, 158, 255, 0.20);
+
     border-radius: 18px;
+
     padding: 22px 15px;
+
     margin: 20px 0;
 }
 
@@ -279,8 +442,14 @@ p {
 .risk-dot {
     width: 14px;
     height: 14px;
+
     border-radius: 50%;
-    margin: auto auto 8px auto;
+
+    margin:
+        auto
+        auto
+        8px
+        auto;
 }
 
 .risk-active {
@@ -293,12 +462,21 @@ p {
     font-size: 13px;
 }
 
-/* Feature cards */
+/* =========================================================
+   FACTOR CARDS
+   ========================================================= */
+
 .factor-card {
-    background: rgba(8, 25, 45, 0.82);
-    border: 1px solid rgba(91, 151, 255, 0.18);
+    background:
+        rgba(8, 25, 45, 0.82);
+
+    border:
+        1px solid rgba(91, 151, 255, 0.18);
+
     border-radius: 15px;
+
     padding: 18px;
+
     margin-bottom: 12px;
 }
 
@@ -312,24 +490,43 @@ p {
     font-size: 14px;
 }
 
-/* Recommendation */
+/* =========================================================
+   RECOMMENDATIONS
+   ========================================================= */
+
 .recommendation {
-    background: linear-gradient(
-        90deg,
-        rgba(37, 190, 255, 0.08),
-        rgba(130, 60, 255, 0.08)
-    );
-    border-left: 4px solid #4bc9ff;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(37, 190, 255, 0.08),
+            rgba(130, 60, 255, 0.08)
+        );
+
+    border-left:
+        4px solid #4bc9ff;
+
     border-radius: 12px;
-    padding: 15px 18px;
-    margin: 10px 0;
+
+    padding:
+        15px 18px;
+
+    margin:
+        10px 0;
 }
 
-/* Metrics */
+/* =========================================================
+   METRICS
+   ========================================================= */
+
 [data-testid="stMetric"] {
-    background: rgba(8, 25, 45, 0.75);
-    border: 1px solid rgba(90, 150, 255, 0.18);
+    background:
+        rgba(8, 25, 45, 0.75);
+
+    border:
+        1px solid rgba(90, 150, 255, 0.18);
+
     border-radius: 15px;
+
     padding: 18px;
 }
 
@@ -341,26 +538,36 @@ p {
     color: #f4f7ff !important;
 }
 
-/* Slider */
+/* =========================================================
+   SLIDERS
+   ========================================================= */
+
 .stSlider label {
     color: #e8effc !important;
 }
 
-div[data-baseweb="slider"] div {
-    color: white;
-}
+/* =========================================================
+   DIVIDER
+   ========================================================= */
 
-/* Divider */
 hr {
     border-color: rgba(100, 150, 255, 0.15);
 }
 
-/* Footer */
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
 .footer {
     text-align: center;
+
     color: #7186a5;
+
     font-size: 12px;
-    padding: 35px 0 10px;
+
+    padding:
+        35px 0
+        10px;
 }
 
 </style>
@@ -372,12 +579,15 @@ hr {
 
 with st.sidebar:
 
-    st.markdown("""
-    <div class="sidebar-title">📱 Digital <span style="color:#8050ff;">Grip</span></div>
-    <div class="sidebar-subtitle">
-    Smartphone Dependence Analysis
+    render_html("""
+    <div class="sidebar-title">
+        📱 Digital <span style="color:#8050ff;">Grip</span>
     </div>
-    """, unsafe_allow_html=True)
+
+    <div class="sidebar-subtitle">
+        Smartphone Dependence Analysis
+    </div>
+    """)
 
     page = st.radio(
         "Navigation",
@@ -392,13 +602,13 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.markdown("""
+    render_html("""
     <div style="color:#7890b3;font-size:12px;">
-    Understand your habits.<br>
-    Discover your digital dependence.<br>
-    Build healthier habits.
+        Understand your habits.<br>
+        Discover your digital dependence.<br>
+        Build healthier habits.
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 # ============================================================
 # HOME PAGE
@@ -406,165 +616,366 @@ with st.sidebar:
 
 if page == "🏠 Home":
 
-    st.markdown("""
+    render_html("""
     <div class="hero">
 
         <div class="hero-small">
-        UNDERSTAND • ANALYZE • BUILD HEALTHIER HABITS
+            UNDERSTAND • ANALYZE • BUILD HEALTHIER HABITS
         </div>
 
         <h1>
-        Is Your Smartphone<br>
-        <span class="gradient-text">Controlling You?</span>
+            Is Your Smartphone<br>
+            <span class="gradient-text">Controlling You?</span>
         </h1>
 
         <p>
-        Digital Grip helps you understand your smartphone habits,
-        estimate your dependence level using machine learning,
-        and receive personalized insights for a healthier digital life.
+            Digital Grip helps you understand your smartphone habits,
+            estimate your dependence level using machine learning,
+            and receive personalized insights for a healthier digital life.
         </p>
 
+        <div style="margin-top:30px;">
+            <span style="
+                display:inline-block;
+                background:linear-gradient(90deg,#24b9ff,#7c3cff);
+                padding:13px 25px;
+                border-radius:12px;
+                font-weight:700;
+                color:white;
+            ">
+                Explore Your Digital Habits →
+            </span>
+        </div>
+
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
-    st.markdown("### ")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns([1.2, 1])
+    # --------------------------------------------------------
+    # INTRODUCTION
+    # --------------------------------------------------------
+
+    col1, col2 = st.columns([1.25, 0.75])
 
     with col1:
 
-        st.markdown("""
-        <div class="dark-card">
+        render_html("""
+        <div class="dark-card" style="min-height:330px;">
 
-        <h2>📱 Understand Your Digital Habits</h2>
+            <div style="
+                color:#50d4ff;
+                font-size:13px;
+                font-weight:700;
+                letter-spacing:1.5px;
+                margin-bottom:15px;
+            ">
+                DIGITAL WELLBEING
+            </div>
 
-        <p>
-        Answer a few simple questions about your everyday
-        smartphone behavior. Digital Grip analyzes behavioral
-        patterns related to phone checking, distraction,
-        productivity, sleep, and difficulty reducing usage.
-        </p>
+            <h2 style="font-size:30px;">
+                📱 Understand Your Digital Habits
+            </h2>
+
+            <p style="font-size:16px;">
+                Your smartphone is part of everyday life.
+                But how much does it influence your behavior?
+            </p>
+
+            <p style="font-size:16px;">
+                Digital Grip analyzes behavioral patterns related to
+                phone checking, distraction, productivity, sleep,
+                and difficulty reducing smartphone usage.
+            </p>
+
+            <div style="
+                margin-top:25px;
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;
+            ">
+
+                <span style="
+                    background:rgba(36,201,255,0.10);
+                    border:1px solid rgba(36,201,255,0.25);
+                    padding:8px 14px;
+                    border-radius:20px;
+                    color:#65d7ff;
+                    font-size:13px;
+                ">
+                    Behavioral Analysis
+                </span>
+
+                <span style="
+                    background:rgba(124,60,255,0.10);
+                    border:1px solid rgba(124,60,255,0.25);
+                    padding:8px 14px;
+                    border-radius:20px;
+                    color:#b58cff;
+                    font-size:13px;
+                ">
+                    Machine Learning
+                </span>
+
+                <span style="
+                    background:rgba(36,201,255,0.10);
+                    border:1px solid rgba(36,201,255,0.25);
+                    padding:8px 14px;
+                    border-radius:20px;
+                    color:#65d7ff;
+                    font-size:13px;
+                ">
+                    Digital Wellbeing
+                </span>
+
+            </div>
 
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with col2:
 
-        st.markdown("""
-        <div class="phone-visual">
+        render_html("""
+        <div class="phone-container">
 
-            <div style="color:#65d7ff;font-size:12px;">
-            DIGITAL WELL-BEING
-            </div>
+            <div class="phone-visual">
 
-            <div class="phone-title">
-            Better Habits<br>
-            <span class="gradient-text">Brighter Future</span>
-            </div>
+                <div style="
+                    color:#67d8ff;
+                    font-size:10px;
+                    font-weight:700;
+                    letter-spacing:1.5px;
+                ">
+                    DIGITAL GRIP
+                </div>
 
-            <div class="phone-leaf">
-            🌱
+                <div style="
+                    font-size:42px;
+                    margin-top:35px;
+                ">
+                    📱
+                </div>
+
+                <div style="
+                    color:white;
+                    font-size:18px;
+                    font-weight:800;
+                    margin-top:20px;
+                ">
+                    Better Habits
+                </div>
+
+                <div style="
+                    font-size:14px;
+                    margin-top:5px;
+                    background:linear-gradient(90deg,#29c8ff,#a348ff);
+                    -webkit-background-clip:text;
+                    -webkit-text-fill-color:transparent;
+                    font-weight:700;
+                ">
+                    Brighter Future
+                </div>
+
+                <div style="
+                    font-size:27px;
+                    margin-top:18px;
+                ">
+                    🌱
+                </div>
+
             </div>
 
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-    # Risk levels
+    # --------------------------------------------------------
+    # FIVE DEPENDENCE LEVELS
+    # --------------------------------------------------------
 
-    st.markdown("## 🎯 5 Dependence Levels")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown("""
-    <p>
-    Your prediction will fall into one of these five levels.
-    </p>
-    """, unsafe_allow_html=True)
+    render_html("""
+    <div style="margin-bottom:10px;">
+
+        <h2>
+            🎯 Five Dependence Levels
+        </h2>
+
+        <p>
+            Your prediction will fall into one of these five levels.
+        </p>
+
+    </div>
+    """)
 
     levels = [
-        ("Very Low", "#39d98a", "Healthy usage patterns"),
-        ("Low", "#8ee65f", "Mild signs of dependence"),
-        ("Moderate", "#ffbd45", "Noticeable patterns"),
-        ("High", "#ff685b", "Strong dependence indicators"),
-        ("Very High", "#ed4d83", "Severe dependence indicators")
+        (
+            "Very Low",
+            "#39d98a",
+            "Healthy usage"
+        ),
+        (
+            "Low",
+            "#8ee65f",
+            "Mild indicators"
+        ),
+        (
+            "Moderate",
+            "#ffbd45",
+            "Noticeable patterns"
+        ),
+        (
+            "High",
+            "#ff685b",
+            "Strong indicators"
+        ),
+        (
+            "Very High",
+            "#ed4d83",
+            "Severe indicators"
+        )
     ]
 
     cols = st.columns(5)
 
-    for col, (name, color, desc) in zip(cols, levels):
-
-        with col:
-
-            st.markdown(f"""
-            <div class="level-box">
-
-                <div class="level-dot"
-                style="background:{color};"></div>
-
-                <div class="level-name">
-                {name}
-                </div>
-
-                <div class="level-desc">
-                {desc}
-                </div>
-
-            </div>
-            """, unsafe_allow_html=True)
-
-    # How it works
-
-    st.markdown("## 🔍 How It Works")
-
-    st.markdown("""
-    <p>
-    Simple steps. Powerful insights.
-    </p>
-    """, unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns(3)
-
-    steps = [
-        ("01", "📱", "Enter Your Habits",
-         "Answer a few simple questions about your smartphone usage and behavior."),
-        ("02", "🧠", "ML Prediction",
-         "Our machine learning model analyzes your behavioral patterns and predicts your dependence level."),
-        ("03", "💡", "Get Insights",
-         "Receive your dependence level and practical digital wellbeing recommendations.")
-    ]
-
-    for col, (num, icon, title, text) in zip(
-        [col1, col2, col3], steps
+    for col, (name, color, description) in zip(
+        cols,
+        levels
     ):
 
         with col:
 
-            st.markdown(f"""
-            <div class="step-card">
+            render_html(f"""
+            <div class="level-box">
 
-                <div class="step-number">{num}</div>
+                <div class="level-dot"
+                     style="
+                         background:{color};
+                         box-shadow:0 0 12px {color};
+                     ">
+                </div>
 
-                <div class="step-icon">{icon}</div>
+                <div class="level-name">
+                    {name}
+                </div>
 
-                <h3>{title}</h3>
-
-                <p>{text}</p>
+                <div class="level-desc">
+                    {description}
+                </div>
 
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
-    st.markdown("### ")
+    # --------------------------------------------------------
+    # HOW IT WORKS
+    # --------------------------------------------------------
 
-    st.markdown("""
-    <div class="glass-card" style="text-align:center;">
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    <h3>Small changes can make a big difference. 🌱</h3>
+    render_html("""
+    <div>
 
-    <p>
-    Take control of your smartphone habits and build a healthier
-    relationship with technology.
-    </p>
+        <h2>
+            🔍 How Digital Grip Works
+        </h2>
+
+        <p>
+            Three simple steps to understand your smartphone habits.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
+
+    col1, col2, col3 = st.columns(3)
+
+    steps = [
+        (
+            "01",
+            "📱",
+            "Enter Your Habits",
+            "Answer simple questions about your everyday smartphone behavior."
+        ),
+        (
+            "02",
+            "🧠",
+            "ML Prediction",
+            "The machine learning model analyzes your behavioral patterns."
+        ),
+        (
+            "03",
+            "💡",
+            "Get Insights",
+            "Receive your dependence level and personalized recommendations."
+        )
+    ]
+
+    for col, (
+        number,
+        icon,
+        title,
+        description
+    ) in zip(
+        [col1, col2, col3],
+        steps
+    ):
+
+        with col:
+
+            render_html(f"""
+            <div class="step-card">
+
+                <div class="step-number">
+                    {number}
+                </div>
+
+                <div class="step-icon">
+                    {icon}
+                </div>
+
+                <h3>
+                    {title}
+                </h3>
+
+                <p>
+                    {description}
+                </p>
+
+            </div>
+            """)
+
+    # --------------------------------------------------------
+    # BOTTOM MESSAGE
+    # --------------------------------------------------------
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    render_html("""
+    <div class="glass-card" style="
+        text-align:center;
+        padding:35px;
+        background:
+        linear-gradient(
+            90deg,
+            rgba(36,190,255,0.07),
+            rgba(124,60,255,0.10)
+        );
+    ">
+
+        <div style="font-size:30px;">
+            🌱
+        </div>
+
+        <h2>
+            Take Control of Your Digital Habits
+        </h2>
+
+        <p>
+            Awareness is the first step toward healthier
+            smartphone usage.
+        </p>
+
+    </div>
+    """)
 
 # ============================================================
 # PREDICT RISK
@@ -572,22 +983,28 @@ if page == "🏠 Home":
 
 elif page == "🔮 Predict Risk":
 
-    st.markdown("""
+    render_html("""
     <div class="hero" style="min-height:260px;padding:40px;">
 
-    <div class="hero-small">SMARTPHONE HABIT ANALYSIS</div>
+        <div class="hero-small">
+            SMARTPHONE HABIT ANALYSIS
+        </div>
 
-    <h1 style="font-size:40px;">
-    Understand Your <span class="gradient-text">Digital Dependence</span>
-    </h1>
+        <h1 style="font-size:40px;">
+            Understand Your
+            <span class="gradient-text">
+                Digital Dependence
+            </span>
+        </h1>
 
-    <p>
-    Rate each behavior from 1 to 5.
-    Higher values generally represent stronger smartphone-related behavior.
-    </p>
+        <p>
+            Rate each behavior from 1 to 5.
+            Higher values generally represent stronger
+            smartphone-related behavior.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("## 📊 Your Smartphone Habits")
 
@@ -632,7 +1049,11 @@ elif page == "🔮 Predict Risk":
         if feature not in questions:
             continue
 
-        with (col1 if index % 2 == 0 else col2):
+        with (
+            col1
+            if index % 2 == 0
+            else col2
+        ):
 
             input_values[feature] = st.slider(
                 questions[feature],
@@ -644,39 +1065,60 @@ elif page == "🔮 Predict Risk":
 
     st.markdown("### ")
 
-    if st.button("🔮 Predict My Dependence", use_container_width=True):
+    if st.button(
+        "🔮 Predict My Dependence",
+        use_container_width=True
+    ):
 
-        user_data = pd.DataFrame([input_values])[features]
+        user_data = pd.DataFrame(
+            [input_values]
+        )[features]
 
-        prediction = model.predict(user_data)[0]
+        prediction = model.predict(
+            user_data
+        )[0]
 
-        probabilities = model.predict_proba(user_data)[0]
+        probabilities = model.predict_proba(
+            user_data
+        )[0]
 
-        predicted_label = label_mapping[prediction]
+        predicted_label = label_mapping[
+            prediction
+        ]
 
-        confidence = probabilities[prediction] * 100
+        confidence = (
+            probabilities[prediction] * 100
+        )
 
-        # Result
+        # ----------------------------------------------------
+        # RESULT
+        # ----------------------------------------------------
 
-        st.markdown(f"""
+        render_html(f"""
         <div class="result-card">
 
-        <div style="color:#8ea6c9;font-size:14px;">
-        YOUR ESTIMATED SMARTPHONE DEPENDENCE LEVEL
-        </div>
+            <div style="
+                color:#8ea6c9;
+                font-size:14px;
+            ">
+                YOUR ESTIMATED SMARTPHONE DEPENDENCE LEVEL
+            </div>
 
-        <div class="result-level">
-        {predicted_label}
-        </div>
+            <div class="result-level">
+                {predicted_label}
+            </div>
 
-        <div style="color:#9fb2ce;">
-        Model confidence: <b>{confidence:.2f}%</b>
-        </div>
+            <div style="color:#9fb2ce;">
+                Model confidence:
+                <b>{confidence:.2f}%</b>
+            </div>
 
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
-        # Risk scale
+        # ----------------------------------------------------
+        # RISK SCALE
+        # ----------------------------------------------------
 
         st.markdown("### 🎯 Your Dependence Scale")
 
@@ -688,7 +1130,9 @@ elif page == "🔮 Predict Risk":
             "Very High": "#ed4d83"
         }
 
-        scale_html = '<div class="risk-scale">'
+        scale_html = """
+        <div class="risk-scale">
+        """
 
         for level in [
             "Very Low",
@@ -698,28 +1142,57 @@ elif page == "🔮 Predict Risk":
             "Very High"
         ]:
 
-            active = level == predicted_label
+            active = (
+                level == predicted_label
+            )
+
+            your_result = ""
+
+            if active:
+                your_result = """
+                <div style="
+                    color:#55d5ff;
+                    font-size:11px;
+                    margin-top:5px;
+                ">
+                    YOUR RESULT
+                </div>
+                """
 
             scale_html += f"""
             <div class="risk-item">
 
                 <div class="risk-dot"
-                style="background:{risk_colors[level]};"></div>
-
-                <div class="{'risk-active' if active else 'risk-normal'}">
-                {level}
+                     style="
+                         background:{risk_colors[level]};
+                         box-shadow:
+                         0 0 10px
+                         {risk_colors[level]};
+                     ">
                 </div>
 
-                {'<div style="color:#55d5ff;font-size:11px;margin-top:5px;">YOUR RESULT</div>' if active else ''}
+                <div class="
+                    {'risk-active'
+                     if active
+                     else 'risk-normal'}
+                ">
+                    {level}
+                </div>
+
+                {your_result}
 
             </div>
             """
 
-        scale_html += "</div>"
+        scale_html += """
+        </div>
+        """
 
-        st.markdown(scale_html, unsafe_allow_html=True)
+        render_html(scale_html)
 
-        # Probability chart
+        # ----------------------------------------------------
+        # PROBABILITY
+        # ----------------------------------------------------
 
         st.markdown("### 📈 Prediction Probability")
 
@@ -731,14 +1204,21 @@ elif page == "🔮 Predict Risk":
                 "High",
                 "Very High"
             ],
-            "Probability": probabilities * 100
+            "Probability (%)":
+                probabilities * 100
         })
 
-        st.bar_chart(
-            probability_df.set_index("Dependence Level")
+        probability_df = probability_df.set_index(
+            "Dependence Level"
         )
 
-        # Key factors
+        st.bar_chart(
+            probability_df
+        )
+
+        # ----------------------------------------------------
+        # KEY FACTORS
+        # ----------------------------------------------------
 
         st.markdown("### 🧠 Key Behavioral Factors")
 
@@ -748,7 +1228,10 @@ elif page == "🔮 Predict Risk":
 
         for feature, value, imp in zip(
             features,
-            [input_values[f] for f in features],
+            [
+                input_values[f]
+                for f in features
+            ],
             importance
         ):
 
@@ -766,31 +1249,45 @@ elif page == "🔮 Predict Risk":
 
         cols = st.columns(2)
 
-        for i, factor in enumerate(factor_data[:6]):
+        for i, factor in enumerate(
+            factor_data[:6]
+        ):
 
             with cols[i % 2]:
 
-                display_name = factor["feature"].replace("_", " ")
+                display_name = (
+                    factor["feature"]
+                    .replace("_", " ")
+                    .title()
+                )
 
-                st.markdown(f"""
+                render_html(f"""
                 <div class="factor-card">
 
-                <div class="factor-title">
-                {display_name.title()}
+                    <div class="factor-title">
+                        {display_name}
+                    </div>
+
+                    <div class="factor-value">
+                        Your rating:
+                        {factor["value"]} / 5
+                    </div>
+
                 </div>
+                """)
 
-                <div class="factor-value">
-                Your rating: {factor["value"]} / 5
-                </div>
+        # ----------------------------------------------------
+        # RECOMMENDATIONS
+        # ----------------------------------------------------
 
-                </div>
-                """, unsafe_allow_html=True)
+        st.markdown(
+            "### 💡 Digital Wellbeing Recommendations"
+        )
 
-        # Recommendations
-
-        st.markdown("### 💡 Digital Wellbeing Recommendations")
-
-        if predicted_label in ["Very High", "High"]:
+        if predicted_label in [
+            "Very High",
+            "High"
+        ]:
 
             recommendations = [
                 "📵 Set specific phone-free periods during study or work.",
@@ -820,14 +1317,11 @@ elif page == "🔮 Predict Risk":
 
         for recommendation in recommendations:
 
-            st.markdown(
-                f"""
-                <div class="recommendation">
+            render_html(f"""
+            <div class="recommendation">
                 {recommendation}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            </div>
+            """)
 
 # ============================================================
 # ANALYTICS
@@ -835,48 +1329,66 @@ elif page == "🔮 Predict Risk":
 
 elif page == "📊 Analytics":
 
-    st.markdown("""
+    render_html("""
     <div class="hero" style="min-height:240px;padding:40px;">
 
-    <div class="hero-small">MODEL ANALYTICS</div>
+        <div class="hero-small">
+            MODEL ANALYTICS
+        </div>
 
-    <h1 style="font-size:40px;">
-    Explore the <span class="gradient-text">Model</span>
-    </h1>
+        <h1 style="font-size:40px;">
+            Explore the
+            <span class="gradient-text">
+                Model
+            </span>
+        </h1>
 
-    <p>
-    Understand how the machine learning model performs
-    and which behavioral indicators contribute most to predictions.
-    </p>
+        <p>
+            Understand how the machine learning model performs
+            and which behavioral indicators contribute most
+            to predictions.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("## 📊 Model Performance")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("ML Model", "Random Forest")
+        st.metric(
+            "ML Model",
+            "Random Forest"
+        )
 
     with col2:
-        st.metric("Test Accuracy", "88.67%")
+        st.metric(
+            "Test Accuracy",
+            "88.67%"
+        )
 
     with col3:
-        st.metric("Risk Levels", "5")
+        st.metric(
+            "Risk Levels",
+            "5"
+        )
 
     st.markdown("## 🧠 Feature Importance")
 
     importance_df = pd.DataFrame({
         "Feature": features,
-        "Importance": model.feature_importances_
+        "Importance":
+            model.feature_importances_
     }).sort_values(
         "Importance",
         ascending=False
     )
 
     st.bar_chart(
-        importance_df.set_index("Feature")
+        importance_df.set_index(
+            "Feature"
+        )
     )
 
     st.markdown("## 📋 Behavioral Indicators")
@@ -895,8 +1407,11 @@ elif page == "📊 Analytics":
 
     display_df = display_df.rename(
         columns={
-            "Feature": "Behavioral Indicator",
-            "Importance": "Importance (%)"
+            "Feature":
+                "Behavioral Indicator",
+
+            "Importance":
+                "Importance (%)"
         }
     )
 
@@ -912,48 +1427,67 @@ elif page == "📊 Analytics":
 
 elif page == "🤖 Model Information":
 
-    st.markdown("""
+    render_html("""
     <div class="hero" style="min-height:250px;padding:40px;">
 
-    <div class="hero-small">MACHINE LEARNING</div>
+        <div class="hero-small">
+            MACHINE LEARNING
+        </div>
 
-    <h1 style="font-size:40px;">
-    How the <span class="gradient-text">Model Works</span>
-    </h1>
+        <h1 style="font-size:40px;">
+            How the
+            <span class="gradient-text">
+                Model Works
+            </span>
+        </h1>
 
-    <p>
-    Digital Grip uses a Random Forest classification model
-    to estimate smartphone dependence from behavioral indicators.
-    </p>
+        <p>
+            Digital Grip uses a Random Forest classification model
+            to estimate smartphone dependence from behavioral indicators.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("## 🤖 Random Forest")
 
-    st.markdown("""
+    render_html("""
     <div class="dark-card">
 
-    <p>
-    Random Forest is an ensemble machine learning algorithm that
-    combines multiple decision trees to make a final prediction.
-    Each tree analyzes behavioral patterns from the input features,
-    while the combined forest produces the final dependence level.
-    </p>
+        <p>
+            Random Forest is an ensemble machine learning algorithm
+            that combines multiple decision trees to make a final
+            prediction.
+        </p>
+
+        <p>
+            Each tree analyzes behavioral patterns from the input
+            features, while the combined forest produces the final
+            dependence level.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("Algorithm", "Random Forest")
+        st.metric(
+            "Algorithm",
+            "Random Forest"
+        )
 
     with col2:
-        st.metric("Input Features", "10")
+        st.metric(
+            "Input Features",
+            "10"
+        )
 
     with col3:
-        st.metric("Classes", "5")
+        st.metric(
+            "Classes",
+            "5"
+        )
 
     st.markdown("## 🎯 Prediction Classes")
 
@@ -965,6 +1499,7 @@ elif page == "🤖 Model Information":
             "High",
             "Very High"
         ],
+
         "Meaning": [
             "Healthy usage patterns",
             "Mild dependence indicators",
@@ -983,37 +1518,37 @@ elif page == "🤖 Model Information":
     st.markdown("## 📌 Model Inputs")
 
     feature_names = [
-        feature.replace("_", " ").title()
+        feature
+        .replace("_", " ")
+        .title()
         for feature in features
     ]
 
-    for i in range(0, len(feature_names), 2):
+    for i in range(
+        0,
+        len(feature_names),
+        2
+    ):
 
         cols = st.columns(2)
 
         with cols[0]:
 
-            st.markdown(
-                f"""
-                <div class="factor-card">
+            render_html(f"""
+            <div class="factor-card">
                 🔹 {feature_names[i]}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            </div>
+            """)
 
         if i + 1 < len(feature_names):
 
             with cols[1]:
 
-                st.markdown(
-                    f"""
-                    <div class="factor-card">
-                    🔹 {feature_names[i+1]}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                render_html(f"""
+                <div class="factor-card">
+                    🔹 {feature_names[i + 1]}
+                </div>
+                """)
 
 # ============================================================
 # ABOUT
@@ -1021,43 +1556,48 @@ elif page == "🤖 Model Information":
 
 elif page == "ℹ️ About":
 
-    st.markdown("""
+    render_html("""
     <div class="hero" style="min-height:260px;padding:40px;">
 
-    <div class="hero-small">ABOUT DIGITAL GRIP</div>
+        <div class="hero-small">
+            ABOUT DIGITAL GRIP
+        </div>
 
-    <h1 style="font-size:40px;">
-    Building a <span class="gradient-text">Healthier Digital Life</span>
-    </h1>
+        <h1 style="font-size:40px;">
+            Building a
+            <span class="gradient-text">
+                Healthier Digital Life
+            </span>
+        </h1>
 
-    <p>
-    Digital Grip is a machine learning project focused on
-    understanding smartphone-related behavioral patterns
-    and estimating digital dependence.
-    </p>
+        <p>
+            Digital Grip is a machine learning project focused on
+            understanding smartphone-related behavioral patterns
+            and estimating digital dependence.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("## 🎯 Project Objective")
 
-    st.markdown("""
+    render_html("""
     <div class="dark-card">
 
-    <p>
-    The goal of Digital Grip is to help users understand
-    their smartphone-related behaviors and identify patterns
-    associated with different levels of smartphone dependence.
-    </p>
+        <p>
+            The goal of Digital Grip is to help users understand
+            their smartphone-related behaviors and identify patterns
+            associated with different levels of smartphone dependence.
+        </p>
 
-    <p>
-    The system combines behavioral inputs with machine learning
-    to provide an estimated dependence level and personalized
-    digital wellbeing recommendations.
-    </p>
+        <p>
+            The system combines behavioral inputs with machine learning
+            to provide an estimated dependence level and personalized
+            digital wellbeing recommendations.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("## ⚙️ What Digital Grip Analyzes")
 
@@ -1076,43 +1616,52 @@ elif page == "ℹ️ About":
 
     cols = st.columns(2)
 
-    for i, (icon, topic) in enumerate(topics):
+    for i, (
+        icon,
+        topic
+    ) in enumerate(topics):
 
         with cols[i % 2]:
 
-            st.markdown(
-                f"""
-                <div class="factor-card">
-                {icon} &nbsp; <b>{topic}</b>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            render_html(f"""
+            <div class="factor-card">
+                {icon}
+                &nbsp;
+                <b>{topic}</b>
+            </div>
+            """)
 
     st.markdown("## 🌱 Digital Wellbeing")
 
-    st.markdown("""
+    render_html("""
     <div class="glass-card">
 
-    <h3>Technology should support your life — not control it.</h3>
+        <h3>
+            Technology should support your life —
+            not control it.
+        </h3>
 
-    <p>
-    Digital Grip is designed to encourage awareness of smartphone
-    habits and help users make more intentional decisions about
-    their digital behavior.
-    </p>
+        <p>
+            Digital Grip is designed to encourage awareness
+            of smartphone habits and help users make more
+            intentional decisions about their digital behavior.
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown("""
+render_html("""
 <div class="footer">
-Digital Grip • Smartphone Usage & Digital Dependence Analysis
-<br>
-Built using Machine Learning and Streamlit
+
+    Digital Grip • Smartphone Usage & Digital Dependence Analysis
+
+    <br>
+
+    Built using Machine Learning and Streamlit
+
 </div>
-""", unsafe_allow_html=True)
+""")

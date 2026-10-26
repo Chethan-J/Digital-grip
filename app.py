@@ -55,8 +55,6 @@ st.markdown("""
         );
 }
 
-/* Main text */
-
 h1, h2, h3 {
     color: #f4f7ff !important;
 }
@@ -64,8 +62,6 @@ h1, h2, h3 {
 p {
     color: #b8c6dc;
 }
-
-/* Sidebar */
 
 section[data-testid="stSidebar"] {
     background:
@@ -79,8 +75,6 @@ section[data-testid="stSidebar"] {
 section[data-testid="stSidebar"] * {
     color: #eaf1ff;
 }
-
-/* Buttons */
 
 .stButton > button {
     background:
@@ -97,8 +91,6 @@ section[data-testid="stSidebar"] * {
     padding: 10px 20px;
 }
 
-/* Metrics */
-
 [data-testid="stMetric"] {
     background: rgba(8, 25, 45, 0.75);
     border: 1px solid rgba(100, 150, 255, 0.20);
@@ -106,19 +98,13 @@ section[data-testid="stSidebar"] * {
     padding: 15px;
 }
 
-/* Slider text */
-
 .stSlider label {
     color: #eaf1ff !important;
 }
 
-/* Dataframes */
-
 [data-testid="stDataFrame"] {
     border-radius: 12px;
 }
-
-/* Divider */
 
 hr {
     border-color: rgba(100, 150, 255, 0.18);
@@ -130,6 +116,9 @@ hr {
 # ============================================================
 # SIDEBAR
 # ============================================================
+
+if "page" not in st.session_state:
+    st.session_state.page = "🏠 Home"
 
 with st.sidebar:
 
@@ -151,7 +140,8 @@ with st.sidebar:
             "📊 Analytics",
             "🤖 Model Information",
             "ℹ️ About"
-        ]
+        ],
+        key="page"
     )
 
     st.markdown("---")
@@ -163,14 +153,10 @@ with st.sidebar:
     )
 
 # ============================================================
-# HOME
+# HOME PAGE
 # ============================================================
 
 if page == "🏠 Home":
-
-    # --------------------------------------------------------
-    # HERO
-    # --------------------------------------------------------
 
     st.markdown(
         "# Is Your Smartphone "
@@ -190,13 +176,16 @@ if page == "🏠 Home":
 
     st.markdown("")
 
+    # --------------------------------------------------------
+    # EXPLORE BUTTON
+    # --------------------------------------------------------
+
     if st.button(
         "🔮 Explore Your Digital Habits",
         use_container_width=False
     ):
-        st.info(
-            "Use **Predict Risk** from the sidebar to begin."
-        )
+        st.session_state.page = "🔮 Predict Risk"
+        st.rerun()
 
     st.markdown("---")
 
@@ -337,12 +326,14 @@ if page == "🏠 Home":
     )
 
 # ============================================================
-# PREDICT RISK
+# PREDICT RISK PAGE
 # ============================================================
 
 elif page == "🔮 Predict Risk":
 
-    st.title("🔮 Smartphone Dependence Prediction")
+    st.title(
+        "🔮 Smartphone Dependence Prediction"
+    )
 
     st.write(
         "Tell us about your smartphone habits."
@@ -354,9 +345,12 @@ elif page == "🔮 Predict Risk":
         "smartphone-related behavior."
     )
 
-    st.header("📊 Your Smartphone Habits")
+    st.header(
+        "📊 Your Smartphone Habits"
+    )
 
     questions = {
+
         "Phone_Checking":
             "📱 How often do you check your phone without a notification?",
 
@@ -446,7 +440,9 @@ elif page == "🔮 Predict Risk":
 
         st.markdown("---")
 
-        st.header("🎯 Your Result")
+        st.header(
+            "🎯 Your Result"
+        )
 
         st.success(
             f"Your estimated smartphone dependence level is: "
@@ -459,7 +455,7 @@ elif page == "🔮 Predict Risk":
         )
 
         # ----------------------------------------------------
-        # OVERALL LEVEL
+        # OVERALL DEPENDENCE LEVEL
         # ----------------------------------------------------
 
         st.subheader(
@@ -515,7 +511,7 @@ elif page == "🔮 Predict Risk":
         )
 
         # ----------------------------------------------------
-        # KEY FACTORS
+        # KEY BEHAVIORAL FACTORS
         # ----------------------------------------------------
 
         st.subheader(
@@ -585,28 +581,47 @@ elif page == "🔮 Predict Risk":
         ]:
 
             recommendations = [
-                "📵 Set specific phone-free periods during study or work.",
-                "🔕 Reduce unnecessary notifications and alerts.",
+
+                "📵 Set specific phone-free periods "
+                "during study or work.",
+
+                "🔕 Reduce unnecessary notifications "
+                "and alerts.",
+
                 "🌙 Avoid smartphone use close to bedtime.",
+
                 "⏱️ Set daily limits for high-distraction apps.",
-                "🧘 Try short periods of intentional phone-free time."
+
+                "🧘 Try short periods of intentional "
+                "phone-free time."
             ]
 
         elif predicted_label == "Moderate":
 
             recommendations = [
+
                 "⏱️ Monitor your daily smartphone usage.",
-                "📵 Try short phone-free periods during focused work.",
+
+                "📵 Try short phone-free periods during "
+                "focused work.",
+
                 "🌙 Reduce smartphone use before sleeping.",
+
                 "🔕 Turn off non-essential notifications."
             ]
 
         else:
 
             recommendations = [
-                "🌱 Your current responses do not indicate strong concerns.",
-                "📱 Continue maintaining balanced smartphone habits.",
+
+                "🌱 Your current responses do not indicate "
+                "strong concerns.",
+
+                "📱 Continue maintaining balanced "
+                "smartphone habits.",
+
                 "⏱️ Keep monitoring your usage over time.",
+
                 "🌙 Maintain healthy sleep and phone-use boundaries."
             ]
 
@@ -617,21 +632,19 @@ elif page == "🔮 Predict Risk":
             )
 
 # ============================================================
-# ANALYTICS
+# ANALYTICS PAGE
 # ============================================================
 
 elif page == "📊 Analytics":
 
-    st.title("📊 Analytics")
+    st.title(
+        "📊 Analytics"
+    )
 
     st.write(
         "Explore the machine learning model and the behavioral "
         "features used for prediction."
     )
-
-    # --------------------------------------------------------
-    # MODEL METRICS
-    # --------------------------------------------------------
 
     col1, col2, col3 = st.columns(3)
 
@@ -657,10 +670,6 @@ elif page == "📊 Analytics":
         )
 
     st.markdown("---")
-
-    # --------------------------------------------------------
-    # FEATURE IMPORTANCE
-    # --------------------------------------------------------
 
     st.header(
         "🧠 Feature Importance"
@@ -701,10 +710,6 @@ elif page == "📊 Analytics":
     st.bar_chart(
         chart_df
     )
-
-    # --------------------------------------------------------
-    # TABLE
-    # --------------------------------------------------------
 
     st.header(
         "📋 Behavioral Indicators"
@@ -747,7 +752,7 @@ elif page == "📊 Analytics":
     )
 
 # ============================================================
-# MODEL INFORMATION
+# MODEL INFORMATION PAGE
 # ============================================================
 
 elif page == "🤖 Model Information":
@@ -865,7 +870,7 @@ elif page == "🤖 Model Information":
                 )
 
 # ============================================================
-# ABOUT
+# ABOUT PAGE
 # ============================================================
 
 elif page == "ℹ️ About":
@@ -903,6 +908,7 @@ elif page == "ℹ️ About":
     )
 
     topics = [
+
         "📱 Phone Checking",
         "🎯 Distraction",
         "⚡ Productivity",

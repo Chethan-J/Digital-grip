@@ -83,7 +83,6 @@ section[data-testid="stSidebar"] * {
             #24b9ff,
             #7c3cff
         );
-
     color: white;
     border: none;
     border-radius: 12px;
@@ -114,11 +113,23 @@ hr {
 """, unsafe_allow_html=True)
 
 # ============================================================
-# SIDEBAR
+# NAVIGATION SETUP
 # ============================================================
 
-if "page" not in st.session_state:
-    st.session_state.page = "🏠 Home"
+pages = [
+    "🏠 Home",
+    "🔮 Predict Risk",
+    "📊 Analytics",
+    "🤖 Model Information",
+    "ℹ️ About"
+]
+
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "🏠 Home"
+
+# ============================================================
+# SIDEBAR
+# ============================================================
 
 with st.sidebar:
 
@@ -132,17 +143,15 @@ with st.sidebar:
 
     st.markdown("---")
 
-    page = st.radio(
+    selected_page = st.radio(
         "Navigation",
-        [
-            "🏠 Home",
-            "🔮 Predict Risk",
-            "📊 Analytics",
-            "🤖 Model Information",
-            "ℹ️ About"
-        ],
-        key="page"
+        pages,
+        index=pages.index(
+            st.session_state.current_page
+        )
     )
+
+    st.session_state.current_page = selected_page
 
     st.markdown("---")
 
@@ -152,6 +161,8 @@ with st.sidebar:
         "Build healthier habits."
     )
 
+page = st.session_state.current_page
+
 # ============================================================
 # HOME PAGE
 # ============================================================
@@ -159,8 +170,7 @@ with st.sidebar:
 if page == "🏠 Home":
 
     st.markdown(
-        "# Is Your Smartphone "
-        "**Controlling You?**"
+        "# Is Your Smartphone **Controlling You?**"
     )
 
     st.markdown(
@@ -184,7 +194,7 @@ if page == "🏠 Home":
         "🔮 Explore Your Digital Habits",
         use_container_width=False
     ):
-        st.session_state.page = "🔮 Predict Risk"
+        st.session_state.current_page = "🔮 Predict Risk"
         st.rerun()
 
     st.markdown("---")
@@ -193,7 +203,9 @@ if page == "🏠 Home":
     # INTRODUCTION
     # --------------------------------------------------------
 
-    st.header("📱 Understand Your Digital Habits")
+    st.header(
+        "📱 Understand Your Digital Habits"
+    )
 
     col1, col2 = st.columns([1.4, 1])
 
@@ -222,10 +234,8 @@ if page == "🏠 Home":
 
     with col2:
 
-        st.markdown("### 📱")
-
         st.markdown(
-            "## Better Habits"
+            "## 📱 Better Habits"
         )
 
         st.markdown(
@@ -240,10 +250,12 @@ if page == "🏠 Home":
     st.markdown("---")
 
     # --------------------------------------------------------
-    # DEPENDENCE LEVELS
+    # FIVE DEPENDENCE LEVELS
     # --------------------------------------------------------
 
-    st.header("🎯 Five Dependence Levels")
+    st.header(
+        "🎯 Five Dependence Levels"
+    )
 
     st.write(
         "Your prediction will fall into one of these five levels."
@@ -280,13 +292,17 @@ if page == "🏠 Home":
     # HOW IT WORKS
     # --------------------------------------------------------
 
-    st.header("🔍 How Digital Grip Works")
+    st.header(
+        "🔍 How Digital Grip Works"
+    )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
 
-        st.subheader("1️⃣ Enter Your Habits")
+        st.subheader(
+            "1️⃣ Enter Your Habits"
+        )
 
         st.write(
             "Answer simple questions about your everyday "
@@ -295,7 +311,9 @@ if page == "🏠 Home":
 
     with col2:
 
-        st.subheader("2️⃣ ML Prediction")
+        st.subheader(
+            "2️⃣ ML Prediction"
+        )
 
         st.write(
             "The machine learning model analyzes your "
@@ -304,7 +322,9 @@ if page == "🏠 Home":
 
     with col3:
 
-        st.subheader("3️⃣ Get Insights")
+        st.subheader(
+            "3️⃣ Get Insights"
+        )
 
         st.write(
             "Receive your estimated dependence level and "
@@ -312,10 +332,6 @@ if page == "🏠 Home":
         )
 
     st.markdown("---")
-
-    # --------------------------------------------------------
-    # FINAL MESSAGE
-    # --------------------------------------------------------
 
     st.header(
         "🌱 Take Control of Your Digital Habits"
@@ -434,11 +450,11 @@ elif page == "🔮 Predict Risk":
             probabilities[prediction] * 100
         )
 
+        st.markdown("---")
+
         # ----------------------------------------------------
         # RESULT
         # ----------------------------------------------------
-
-        st.markdown("---")
 
         st.header(
             "🎯 Your Result"
@@ -455,7 +471,7 @@ elif page == "🔮 Predict Risk":
         )
 
         # ----------------------------------------------------
-        # OVERALL DEPENDENCE LEVEL
+        # OVERALL LEVEL
         # ----------------------------------------------------
 
         st.subheader(
@@ -511,7 +527,7 @@ elif page == "🔮 Predict Risk":
         )
 
         # ----------------------------------------------------
-        # KEY BEHAVIORAL FACTORS
+        # KEY FACTORS
         # ----------------------------------------------------
 
         st.subheader(
@@ -582,18 +598,15 @@ elif page == "🔮 Predict Risk":
 
             recommendations = [
 
-                "📵 Set specific phone-free periods "
-                "during study or work.",
+                "📵 Set specific phone-free periods during study or work.",
 
-                "🔕 Reduce unnecessary notifications "
-                "and alerts.",
+                "🔕 Reduce unnecessary notifications and alerts.",
 
                 "🌙 Avoid smartphone use close to bedtime.",
 
                 "⏱️ Set daily limits for high-distraction apps.",
 
-                "🧘 Try short periods of intentional "
-                "phone-free time."
+                "🧘 Try short periods of intentional phone-free time."
             ]
 
         elif predicted_label == "Moderate":
@@ -602,8 +615,7 @@ elif page == "🔮 Predict Risk":
 
                 "⏱️ Monitor your daily smartphone usage.",
 
-                "📵 Try short phone-free periods during "
-                "focused work.",
+                "📵 Try short phone-free periods during focused work.",
 
                 "🌙 Reduce smartphone use before sleeping.",
 
@@ -614,11 +626,9 @@ elif page == "🔮 Predict Risk":
 
             recommendations = [
 
-                "🌱 Your current responses do not indicate "
-                "strong concerns.",
+                "🌱 Your current responses do not indicate strong concerns.",
 
-                "📱 Continue maintaining balanced "
-                "smartphone habits.",
+                "📱 Continue maintaining balanced smartphone habits.",
 
                 "⏱️ Keep monitoring your usage over time.",
 
